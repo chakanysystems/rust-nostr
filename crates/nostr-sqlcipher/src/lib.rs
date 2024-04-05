@@ -79,7 +79,7 @@ impl SQLCipherDatabase {
     #[tracing::instrument(skip_all)]
     async fn key(&self, conn: &Object, key: String) -> Result<(), Error> {
         conn.interact(move |conn| {
-            let key_query = format!("PRAGMA key = \"{}\"", key);
+            let key_query = format!("PRAGMA key = \"{}\";", key);
             conn.execute(&key_query, [])?;
 
             Ok::<(), Error>(())
@@ -91,7 +91,7 @@ impl SQLCipherDatabase {
     #[tracing::instrument(skip_all)]
     async fn rekey(&self, conn: &Object, key: String) -> Result<(), Error> {
         conn.interact(move |conn| {
-            let key_query = format!("PRAGMA rekey = \"{}\"", key);
+            let key_query = format!("PRAGMA rekey = \"{}\";", key);
             conn.execute(&key_query, [])?;
 
             Ok::<(), Error>(())
