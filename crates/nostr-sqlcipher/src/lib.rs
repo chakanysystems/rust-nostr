@@ -79,8 +79,7 @@ impl SQLCipherDatabase {
     #[tracing::instrument(skip_all)]
     async fn key(&self, conn: &Object, key: String) -> Result<(), Error> {
         conn.interact(move |conn| {
-            let key_query = format!("PRAGMA key = '{}';", key);
-            conn.execute(&key_query, [])?;
+            conn.pragma_update(None, "key", key).expect("Could not unlock db");
 
             Ok::<(), Error>(())
         }).await??;
@@ -91,8 +90,7 @@ impl SQLCipherDatabase {
     #[tracing::instrument(skip_all)]
     async fn rekey(&self, conn: &Object, key: String) -> Result<(), Error> {
         conn.interact(move |conn| {
-            let key_query = format!("PRAGMA rekey = '{}';", key);
-            conn.execute(&key_query, [])?;
+            conn.pragma_update(None, "rekey", key).expect("Could not change db key");
 
             Ok::<(), Error>(())
         }).await??;
